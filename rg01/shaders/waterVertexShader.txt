@@ -1,0 +1,27 @@
+#version 460 core
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec2 aTexCoords;
+
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+uniform vec3 cameraPos;
+uniform vec3 lightPos;
+
+out vec2 TexCoords;
+out vec3 FragPos;
+out vec4 clipSpace;
+out vec3 toCameraVector;
+out vec3 fromLightVector;
+
+const float tiling = 2;
+
+void main()
+{
+	FragPos = vec3(model * vec4(aPos, 1.0));
+   	gl_Position = projection * view * model * vec4(aPos, 1.0);
+	TexCoords = vec2(aPos.x/2.0 + 0.5, aPos.y/2.0 + 0.5) * tiling;
+	clipSpace = gl_Position;
+	toCameraVector = cameraPos - FragPos;
+	fromLightVector = FragPos.xyz - lightPos;
+};
